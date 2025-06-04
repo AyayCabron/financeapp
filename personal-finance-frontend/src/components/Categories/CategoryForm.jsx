@@ -69,20 +69,21 @@ function CategoryForm({ editingCategory, setEditingCategory, onCategoryAdded, on
 
       if (editingCategory) {
         response = await api.put(`/categories/${editingCategory.id}`, payload);
-        // REMOVIDO: onCategoryUpdated(response.data); // Apenas chamar onSuccess
+        console.log("CategoryForm - PUT response:", response.data); // Log para depuração
       } else {
         response = await api.post('/categories', payload);
-        // REMOVIDO: onCategoryAdded(response.data); // Apenas chamar onSuccess
+        console.log("CategoryForm - POST response:", response.data); // Log para depuração
       }
 
       setName('');
       setType('expense');
       setEditingCategory(null);
       if (onClose) onClose(); // Fecha o formulário/dialog após sucesso
-      if (onSuccess) onSuccess(); // Notifica o componente pai que a operação foi bem-sucedida
+      if (onSuccess) await onSuccess(); // ✅ Adicionado 'await' aqui para garantir que a atualização do estado pai seja concluída
+      console.log("CategoryForm - onSuccess called and awaited."); // Log para depuração
 
     } catch (err) {
-      console.error("Erro ao salvar categoria:", err.response?.data || err.message);
+      console.error("CategoryForm - Erro ao salvar categoria:", err.response?.data || err.message); // Log melhorado
       const backendMessage = err.response?.data?.detail || err.response?.data?.message || 'Falha ao salvar categoria. Verifique os dados e tente novamente.';
       setFormError(backendMessage); // Exibe o erro no Alert do Material UI
     } finally {
