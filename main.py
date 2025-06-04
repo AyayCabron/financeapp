@@ -30,7 +30,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configura CORS para permitir frontend rodando localmente
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/*": {"origins": "https://financeapp-765q.onrender.com/"}})
 
 # Configurações de chave secreta e JWT
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'uma_chave_secreta_padrao_muito_segura_para_dev')
