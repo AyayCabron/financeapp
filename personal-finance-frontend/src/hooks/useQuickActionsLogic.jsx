@@ -10,11 +10,13 @@ import { useNavigate } from 'react-router-dom'; // Certifique-se que useNavigate
 const useQuickActionsLogic = ({
   handleOpenTransactionForm,
   handleOpenAccountForm,
-  handleOpenCategoryForm,
+  handleOpenCategoryForm, // ✅ Adicionado: Função para abrir o formulário de categoria
   handleOpenTransactionsListModal,
   handleOpenAccountsListModal,
   handleOpenCategoriesListModal,
-  handleOpenSheetsOptionsModal, // ✅ Adicionado
+  handleOpenSheetsOptionsModal,
+  handleOpenTotalBalanceModal, // Passando para o useQuickActionsLogic se ele for usar
+  handleCloseTotalBalanceModal, // Passando para o useQuickActionsLogic se ele for usar
   // Não precisamos mais passar 'navigate' como prop aqui, pois o hook já o usa internamente.
   // navigate, // <-- REMOVA ESTA LINHA SE VOCÊ ESTIVER PASSANDO DE Dashboard
 }) => {
@@ -79,6 +81,10 @@ const useQuickActionsLogic = ({
   const onNewAccountClick = useCallback(() => {
     handleOpenAccountForm();
   }, [handleOpenAccountForm]);
+
+  const onNewCategoryClick = useCallback(() => { // NOVO: Função para abrir o formulário de nova categoria
+    handleOpenCategoryForm();
+  }, [handleOpenCategoryForm]);
 
   const onViewCategoriesClick = useCallback(() => {
     handleOpenCategoriesListModal();
@@ -153,6 +159,7 @@ const useQuickActionsLogic = ({
     // Funções de Ações Rápidas (QuickActionsCard)
     onNewTransactionClick,
     onNewAccountClick,
+    onNewCategoryClick, // NOVO: Retorna a função para o Dashboard
     onViewCategoriesClick,
     onViewTransactionsClick,
     onViewAccountsClick,
