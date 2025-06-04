@@ -41,6 +41,7 @@ print(f"DEBUG: CORS configurado para origens: {allowed_origins}")
 
 
 # Configurações de chave secreta e JWT
+app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'uma_chave_secreta_padrao_muito_segura_para_dev')
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'super_secreta_jwt_para_dev')
 app.config['JWT_TOKEN_LOCATION'] = ['headers']
