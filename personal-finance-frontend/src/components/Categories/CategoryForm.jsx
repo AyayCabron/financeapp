@@ -69,12 +69,10 @@ function CategoryForm({ editingCategory, setEditingCategory, onCategoryAdded, on
 
       if (editingCategory) {
         response = await api.put(`/categories/${editingCategory.id}`, payload);
-        // alert('Categoria atualizada com sucesso!'); // REMOVIDO: Usar Snackbar no pai
-        if (onCategoryUpdated) onCategoryUpdated(response.data);
+        // REMOVIDO: onCategoryUpdated(response.data); // Apenas chamar onSuccess
       } else {
         response = await api.post('/categories', payload);
-        // alert('Categoria adicionada com sucesso!'); // REMOVIDO: Usar Snackbar no pai
-        if (onCategoryAdded) onCategoryAdded(response.data);
+        // REMOVIDO: onCategoryAdded(response.data); // Apenas chamar onSuccess
       }
 
       setName('');
