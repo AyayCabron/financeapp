@@ -29,12 +29,10 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz'; // Ícone para conversão
 import SavingsIcon from '@mui/icons-material/Savings'; // Ícone para economia
 import { useNavigate } from 'react-router-dom';
-// Removendo a importação direta do axios, pois usaremos a instância configurada
-// import axios from 'axios'; 
-import api from '../api/axios'; // Importe a instância 'api' do seu arquivo axios.js
 
-// URL base da sua API Flask (ajuste conforme necessário)
-// REMOVIDO: const API_BASE_URL = 'http://localhost:5000';
+import api from '../../api/axios'; 
+
+//  const API_BASE_URL = 'http://localhost:5000';
 
 /**
  * Funções de Cálculo Auxiliares (Expandidas para Conversão de Unidades e Economia)
