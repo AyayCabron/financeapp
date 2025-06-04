@@ -405,7 +405,7 @@ function Dashboard() {
   const quickActions = useQuickActionsLogic({
     handleOpenTransactionForm,
     handleOpenAccountForm,
-    handleOpenCategoryForm,
+    handleOpenCategoryForm, // ✅ Passando handleOpenCategoryForm para o hook
     handleOpenTransactionsListModal,
     handleOpenAccountsListModal,
     handleOpenCategoriesListModal,
@@ -478,6 +478,7 @@ function Dashboard() {
           <QuickActionsCard
             onNewTransactionClick={quickActions.onNewTransactionClick}
             onNewAccountClick={quickActions.onNewAccountClick}
+            onNewCategoryClick={quickActions.onNewCategoryClick} {/* NOVO: Passando a função onNewCategoryClick */}
             onViewCategoriesClick={quickActions.onViewCategoriesClick}
             onViewTransactionsClick={quickActions.onViewTransactionsClick}
             onViewAccountsClick={quickActions.onViewAccountsClick}
