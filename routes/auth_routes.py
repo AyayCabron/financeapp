@@ -10,13 +10,6 @@ from database.models import User  # Importa o modelo User
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-
-# Rota para o método OPTIONS no /auth/login (para CORS preflight)
-@auth_bp.route('/login', methods=['OPTIONS'])
-def login_options():
-    return '', 200
-
-
 @auth_bp.route('/register', methods=['POST'])
 def register_user():
     data = request.get_json()
