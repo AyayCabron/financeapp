@@ -29,21 +29,32 @@ load_dotenv()
 # Inicializa a aplicação Flask
 app = Flask(__name__)
 
-# Configura CORS para permitir frontend rodando localmente
-CORS(app, resources={r"/*": {"origins": "https://financeapp-frontend.onrender.com"}})
+# --- Configuração de CORS ---
+# Lê as origens permitidas da variável de ambiente ALLOWED_ORIGINS
+# Se houver múltiplas origens, elas devem ser separadas por vírgula (ex: "http://localhost:3000,https://seu-frontend.onrender.com")
+allowed_origins_str = os.getenv('ALLOWED_ORIGINS', 'http://localhost:3000') # Padrão para desenvolvimento local
+allowed_origins = [origin.strip() for origin in allowed_origins_str.split(',')]
+
+# Configura CORS com as origens permitidas
+CORS(app, resources={r"/*": {"origins": allowed_origins}})
+print(f"DEBUG: CORS configurado para origens: {allowed_origins}")
+
 
 # Configurações de chave secreta e JWT
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'uma_chave_secreta_padrao_muito_segura_para_dev')
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'super_secreta_jwt_para_dev')
 app.config['JWT_TOKEN_LOCATION'] = ['headers']
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = os.getenv('JWT_ACCESS_TOKEN_EXPIRES', 3600) # 1 hora
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES', 3600)) # Converter para int
 app.config['JWT_COOKIE_SECURE'] = False # Para desenvolvimento local (HTTP)
 app.config['JWT_COOKIE_CSRF_PROTECT'] = False # Para desenvolvimento local
 
 jwt = JWTManager(app)
 
 # Cria as tabelas no banco de dados se não existirem
+# REMOVA OU COMENTE ESTA LINHA SE ESTIVER USANDO ALEMBIC PARA GERENCIAR MIGRAÇÕES EM PRODUÇÃO
 Base.metadata.create_all(bind=engine)
+print("DEBUG: Tabelas verificadas/criadas (se Base.metadata.create_all estiver ativo).")
+
 
 # --- JWT User Lookup Callback ---
 @jwt.user_lookup_loader
@@ -68,12 +79,12 @@ def handle_unprocessable_entity(e):
 def hello_world():
     return jsonify({"message": "Bem-vindo à API de Gestão Financeira Pessoal!"})
 
-#  Fecha a sessão do banco após cada requisição 
+# Fecha a sessão do banco após cada requisição
 @app.teardown_request
 def remove_session(exception=None):
     SessionLocal.remove()
 
-# Registro dos blueprints (rotas do projeto) 
+# Registro dos blueprints (rotas do projeto)
 app.register_blueprint(auth_bp)
 app.register_blueprint(account_bp)
 app.register_blueprint(category_bp)
@@ -87,4 +98,7 @@ app.register_blueprint(agenda_account_bp)
 app.register_blueprint(agenda_transaction_bp)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    print("DEBUG: Rodando Flask em modo de desenvolvimento (apenas para teste local).")
+    # No Render, o Gunicorn usará a porta fornecida pela variável de ambiente PORT
+    app.run(debug=True, host='0.0.0.0', port=os.getenv('PORT', 5000))
+
