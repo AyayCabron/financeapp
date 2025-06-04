@@ -29,10 +29,12 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz'; // Ícone para conversão
 import SavingsIcon from '@mui/icons-material/Savings'; // Ícone para economia
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// Removendo a importação direta do axios, pois usaremos a instância configurada
+// import axios from 'axios'; 
+import api from '../api/axios'; // Importe a instância 'api' do seu arquivo axios.js
 
 // URL base da sua API Flask (ajuste conforme necessário)
-const API_BASE_URL = 'https://financeapp-765q.onrender.com/';
+// REMOVIDO: const API_BASE_URL = 'http://localhost:5000';
 
 /**
  * Funções de Cálculo Auxiliares (Expandidas para Conversão de Unidades e Economia)
@@ -197,7 +199,8 @@ function SmartCalculator() {
 
       // Tentar primeiro a interpretação via API (para regras mais complexas como regra de 3)
       try {
-        const response = await axios.post(`${API_BASE_URL}/smart-calculator-interpret`, {
+        // CORREÇÃO AQUI: Usando a instância 'api' importada
+        const response = await api.post('/smart-calculator-interpret', {
           expression: textInput,
         });
 
