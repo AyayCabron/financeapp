@@ -21,8 +21,9 @@ import {
   IconButton,       // Importe IconButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close'; // Ícone de fechar
+import PropTypes from 'prop-types'; // Importação de PropTypes
 
-// Adicione a prop 'open' e 'onSuccess' para uso como modal autônomo
+// Adicione a prop 'onClose' se o formulário for usado em um Dialog
 function CategoryForm({ editingCategory, setEditingCategory, onCategoryAdded, onCategoryUpdated, onClose, open, onSuccess }) {
   const theme = useTheme(); // Para acessar o tema e suas cores
   const [name, setName] = useState('');
