@@ -698,6 +698,7 @@ function Dashboard() {
           loadingCategories={loading} // PASSANDO O ESTADO DE LOADING
           categoriesError={error} // PASSANDO O ESTADO DE ERRO
           onEditCategory={handleEditCategory}
+          onCategoryAdded={fetchCategories} {/* NOVO: Passando a função fetchCategories */}
         />
 
         {/* MODAL: SheetsOptionsModal */}
