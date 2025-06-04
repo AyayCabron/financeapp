@@ -32,7 +32,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 // URL base da sua API Flask (ajuste conforme necessário)
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://financeapp-765q.onrender.com/';
 
 /**
  * Funções de Cálculo Auxiliares (Expandidas para Conversão de Unidades e Economia)
