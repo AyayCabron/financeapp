@@ -16,11 +16,12 @@ import CategoryIcon from '@mui/icons-material/Category';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DescriptionIcon from '@mui/icons-material/Description';
 import EventNoteIcon from '@mui/icons-material/EventNote'; // Ícone para Agenda Financeira
-import TrackChangesIcon from '@mui/icons-material/TrackChanges'; // NOVO: Ícone para Metas e Objetivos (Alvo)
+import TrackChangesIcon from '@mui/icons-material/TrackChanges'; // Ícone para Metas e Objetivos (Alvo)
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'; // Ícone para Listas
 import CalculateIcon from '@mui/icons-material/Calculate'; // Ícone para Calculadora Inteligente
 import AnalyticsIcon from '@mui/icons-material/Analytics'; // Ícone para Analista
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'; // Ícone para Minhas Conquistas (Mantido)
+import AddIcon from '@mui/icons-material/Add'; // NOVO: Ícone para adicionar
 
 function QuickActionsCard({
   onNewTransactionClick,
@@ -32,9 +33,10 @@ function QuickActionsCard({
   onFinancialAgendaClick,
   onGoalsObjectivesClick,
   onListsClick,
-  onSmartCalculatorClick, // <-- Esta prop é importante!
+  onSmartCalculatorClick,
   onAnalystClick,
   onAchievementsClick,
+  onNewCategoryClick, // NOVO: Prop para o botão de Nova Categoria
 }) {
   const theme = useTheme();
 
@@ -68,6 +70,12 @@ function QuickActionsCard({
         <IconButton color="primary" aria-label="adicionar conta" onClick={onNewAccountClick} sx={{ display: 'flex', flexDirection: 'column', p: 1, flexShrink: 0 }}>
           <AccountBalanceWalletIcon sx={{ fontSize: 35, color: theme.palette.primary.main }} />
           <Typography variant="caption" sx={{ mt: 0.5, color: theme.palette.text.secondary }}>Nova Conta</Typography>
+        </IconButton>
+
+        {/* NOVO: Adicionar Categoria */}
+        <IconButton color="primary" aria-label="adicionar categoria" onClick={onNewCategoryClick} sx={{ display: 'flex', flexDirection: 'column', p: 1, flexShrink: 0 }}>
+          <AddIcon sx={{ fontSize: 35, color: theme.palette.primary.main }} />
+          <Typography variant="caption" sx={{ mt: 0.5, color: theme.palette.text.secondary }}>Nova Categoria</Typography>
         </IconButton>
 
         {/* Ver Categorias */}
@@ -145,9 +153,10 @@ QuickActionsCard.propTypes = {
   onFinancialAgendaClick: PropTypes.func.isRequired,
   onGoalsObjectivesClick: PropTypes.func.isRequired,
   onListsClick: PropTypes.func.isRequired,
-  onSmartCalculatorClick: PropTypes.func.isRequired, // Certifique-se que está como isRequired
+  onSmartCalculatorClick: PropTypes.func.isRequired,
   onAnalystClick: PropTypes.func.isRequired,
   onAchievementsClick: PropTypes.func.isRequired,
+  onNewCategoryClick: PropTypes.func.isRequired, // NOVO: PropType para o botão de Nova Categoria
 };
 
 export default QuickActionsCard;
