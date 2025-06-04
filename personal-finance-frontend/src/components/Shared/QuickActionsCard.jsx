@@ -1,6 +1,6 @@
 // src/components/Shared/QuickActionsCard.jsx
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'; // Importação de PropTypes
 import {
   Paper,
   Typography,
@@ -156,7 +156,7 @@ QuickActionsCard.propTypes = {
   onSmartCalculatorClick: PropTypes.func.isRequired,
   onAnalystClick: PropTypes.func.isRequired,
   onAchievementsClick: PropTypes.func.isRequired,
-  onNewCategoryClick: PropTypes.func.isRequired, // NOVO: PropType para o botão de Nova Categoria
+  onNewCategoryClick: PropTypes.func.isRequired, // PropType para o botão de Nova Categoria
 };
 
 export default QuickActionsCard;
