@@ -627,14 +627,21 @@ function Dashboard() {
         </Grid>
 
 
-        {/* Diálogo de Formulário de Categoria (AGORA USANDO O COMPONENTE CategoryForm COMO UM DIALOGO COMPLETO) */}
-        <CategoryForm
-          open={isCategoryFormOpen} // Controla a abertura/fechamento do Dialog interno do CategoryForm
-          onClose={handleCloseCategoryForm}
-          editingCategory={editingCategory}
-          setEditingCategory={setEditingCategory}
-          onSuccess={fetchCategories} // Chamada para recarregar categorias após sucesso
-        />
+        {/* Diálogos de Formulário */}
+        <Dialog open={isCategoryFormOpen} onClose={handleCloseCategoryForm} fullWidth maxWidth="sm">
+          <DialogTitle sx={{ backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, borderBottom: '1px solid', borderColor: theme.palette.divider }}>
+            {editingCategory ? 'Editar Categoria' : 'Adicionar Nova Categoria'}
+          </DialogTitle>
+          <DialogContent dividers sx={{ borderBottom: 'none', borderColor: theme.palette.divider }}>
+            <CategoryForm
+              editingCategory={editingCategory}
+              setEditingCategory={setEditingCategory}
+              onCategoryAdded={handleCategoryAdded}
+              onCategoryUpdated={handleCategoryUpdated}
+              onClose={handleCloseCategoryForm}
+            />
+          </DialogContent>
+        </Dialog>
 
         <Dialog open={isAccountFormOpen} onClose={handleCloseAccountForm} fullWidth maxWidth="sm">
           <DialogTitle sx={{ backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, borderBottom: '1px solid', borderColor: theme.palette.divider }}>
@@ -746,7 +753,7 @@ function Dashboard() {
             </Box>
 
             {/* Opcional: Pré-visualização ou descrição do que será exibido */}
-            <Box sx={{ mt: 4, p: 2, border: `1px dashed ${theme.palette.divider}`, borderRadius: '8px` }}>
+            <Box sx={{ mt: 4, p: 2, border: `1px dashed ${theme.palette.divider}`, borderRadius: '8px' }}>
               {selectedSheetOption === 'transactions_table' && (
                 <Typography variant="body2" color="text.secondary">
                   Exibe todas as suas transações em uma tabela interativa com filtros e ordenação.
