@@ -36,7 +36,7 @@ allowed_origins_str = os.getenv('ALLOWED_ORIGINS', 'https://financeapp-frontend.
 allowed_origins = [origin.strip() for origin in allowed_origins_str.split(',')]
 
 # Configura CORS com as origens permitidas
-CORS(app, resources={r"/*": {"origins": allowed_origins}})
+CORS(app, origins=allowed_origins, supports_credentials=True)
 print(f"DEBUG: CORS configurado para origens: {allowed_origins}")
 
 
