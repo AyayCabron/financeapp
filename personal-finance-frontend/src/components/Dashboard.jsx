@@ -478,7 +478,7 @@ function Dashboard() {
           <QuickActionsCard
             onNewTransactionClick={quickActions.onNewTransactionClick}
             onNewAccountClick={quickActions.onNewAccountClick}
-            onNewCategoryClick={quickActions.onNewCategoryClick} {/* NOVO: Passando a função onNewCategoryClick */}
+            onNewCategoryClick={quickActions.onNewCategoryClick} 
             onViewCategoriesClick={quickActions.onViewCategoriesClick}
             onViewTransactionsClick={quickActions.onViewTransactionsClick}
             onViewAccountsClick={quickActions.onViewAccountsClick}
