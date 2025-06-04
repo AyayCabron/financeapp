@@ -32,7 +32,7 @@ app = Flask(__name__)
 # --- Configuração de CORS ---
 # Lê as origens permitidas da variável de ambiente ALLOWED_ORIGINS
 # Se houver múltiplas origens, elas devem ser separadas por vírgula (ex: "http://localhost:3000,https://seu-frontend.onrender.com")
-allowed_origins_str = os.getenv('ALLOWED_ORIGINS', 'http://localhost:3000') # Padrão para desenvolvimento local
+allowed_origins_str = os.getenv('ALLOWED_ORIGINS', 'https://financeapp-frontend.onrender.com') # Padrão para desenvolvimento local
 allowed_origins = [origin.strip() for origin in allowed_origins_str.split(',')]
 
 # Configura CORS com as origens permitidas
