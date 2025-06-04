@@ -1,0 +1,167 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+  --primary-color: #2c3e50;          /* azul escuro para textos principais */
+  --secondary-color: #7f8c8d;        /* cinza médio para textos secundários */
+  --accent-color: #2980b9;           /* azul vibrante para destaques e interações */
+  --background-color: #ecf0f1;       /* cinza claro de fundo geral */
+  --background-form: #ffffff;        /* fundo branco para formulários e cards */
+  --border-color: #d1d5db;           /* borda cinza clara */
+  --border-radius: 8px;              /* bordas arredondadas moderadas */
+  --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --box-shadow-light: 0 1px 3px rgba(0,0,0,0.1);
+  --box-shadow-strong: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: var(--background-color);
+  color: var(--primary-color);
+  min-height: 100vh;
+  padding: 2rem;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Container geral do sistema ERP */
+.container {
+  background: var(--background-form);
+  padding: 2rem 2.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow-strong);
+  max-width: 720px;
+  width: 100%;
+}
+
+/* Títulos */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  letter-spacing: 0.02em;
+}
+
+/* Formulários */
+form {
+  background-color: var(--background-form);
+  padding: 2rem 2rem 2.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow-light);
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto 2rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Labels */
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--secondary-color);
+  font-weight: 600;
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+/* Inputs e selects */
+input, select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  border-radius: var(--border-radius);
+  border: 1.5px solid var(--border-color);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  color: var(--primary-color);
+  background-color: #fff;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+input::placeholder {
+  color: #a0aec0;
+  font-style: italic;
+}
+
+input:focus, select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 5px var(--accent-color);
+  outline: none;
+}
+
+/* Botões */
+button {
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--border-radius);
+  border: none;
+  background-color: var(--accent-color);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.25s ease;
+  box-shadow: 0 2px 6px rgba(41, 128, 185, 0.5);
+  align-self: flex-start;
+}
+
+button:hover {
+  background-color: #1c5ea3;
+  box-shadow: 0 4px 12px rgba(28, 94, 163, 0.75);
+}
+
+/* Mensagens e alertas */
+.message {
+  font-size: 1rem;
+  color: var(--secondary-color);
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+/* Textos em código (ex: debug ou códigos) */
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  background-color: #f5f7fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #2d3748;
+  user-select: text;
+}
+
+/* Responsividade básica */
+@media (max-width: 600px) {
+  body {
+    padding: 1rem;
+    align-items: center;
+  }
+
+  .container {
+    padding: 1.5rem 1.5rem 2rem;
+    max-width: 100%;
+    box-shadow: none;
+  }
+
+  form {
+    max-width: 100%;
+    padding: 1.5rem 1.5rem 2rem;
+  }
+
+  button {
+    width: 100%;
+    text-align: center;
+  }
+}

@@ -1,0 +1,108 @@
+/* Botão para abrir o menu */
+.menu-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1001;
+  transition: background-color 0.3s ease;
+}
+
+.menu-button:hover {
+  background-color: rgba(31, 36, 48, 0.8);
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100vh;
+  background-color: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  color: var(--text-color);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+  border-right: 1px solid var(--border-color);
+  box-shadow: 4px 0 12px rgba(0,0,0,0.3);
+}
+
+/* Estado colapsado */
+.sidebar.collapsed {
+  transform: translateX(-100%);
+}
+
+/* Estado aberto */
+.sidebar.open {
+  transform: translateX(0);
+}
+
+/* Header da sidebar */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.sidebar-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Botão para fechar a sidebar */
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 5px;
+}
+
+.sidebar-toggle svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* Navegação interna */
+.sidebar-nav {
+  padding: 0 20px;
+}
+
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 12px 0;
+  color: var(--text-color);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background-color 0.2s;
+}
+
+.sidebar-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Botão de logout */
+.sidebar-link.logout {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  color: #ff5e5e;
+  cursor: pointer;
+}
