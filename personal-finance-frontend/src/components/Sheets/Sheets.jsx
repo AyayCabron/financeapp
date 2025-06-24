@@ -1,4 +1,3 @@
-// src/components/Sheets/Sheets.jsx
 import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import {
   Box,
@@ -46,19 +45,15 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SaveIcon from '@mui/icons-material/Save';
 import AddIcon from '@mui/icons-material/Add';
-import UploadFileIcon from '@mui/icons-material/UploadFile'; // Ícone para Importar
-import DownloadIcon from '@mui/icons-material/Download'; // Ícone para Exportar/Download
+import UploadFileIcon from '@mui/icons-material/UploadFile'; 
+import DownloadIcon from '@mui/icons-material/Download'; 
 
-// Certifique-se de que ColorModeContext e useAuth estão corretamente importados
 import { ColorModeContext } from '../../main';
 import { useAuth } from '../../context/AuthContext';
-import api from '../../api/axios'; // Importa a instância do axios
+import api from '../../api/axios'; 
 
-// NOVO: Importa o componente QuickActionsCard
+
 import QuickActionsCard from '../Shared/QuickActionsCard';
-
-// Importa PapaParse para CSV (adicionar no index.html ou como dependência se não estiver lá)
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
 function Sheets() {
   const theme = useTheme();
@@ -67,18 +62,18 @@ function Sheets() {
   const { logout } = useAuth();
   const { user } = useAuth();
 
-  // --- Estados para a Planilha de Transações ---
+
   const [transactionsData, setTransactionsData] = useState([]);
   const [loadingTransactions, setLoadingTransactions] = useState(true);
   const [transactionsError, setTransactionsError] = useState(null);
 
-  // NOVO: Estados para listas de contas e categorias para os Selects
+
   const [accountsList, setAccountsList] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
   const [loadingRelatedData, setLoadingRelatedData] = useState(true);
   const [relatedDataError, setRelatedDataError] = useState(null);
 
-  // Colunas para transações, incluindo campos para import/export
+
   const columns = useMemo(() => [
     { id: 'descricao', name: 'Descrição', type: 'text' },
     { id: 'valor', name: 'Valor', type: 'number' },
@@ -95,7 +90,6 @@ function Sheets() {
     { id: 'total_parcelas', name: 'Total Parcelas', type: 'number' },
     { id: 'id_transacao_pai', name: 'ID Transação Pai', type: 'number' },
     { id: 'status', name: 'Status', type: 'text' },
-    // id, user_id, created_at, updated_at são gerados/gerenciados pelo backend
   ], [accountsList, categoriesList]);
 
   const [editingCell, setEditingCell] = useState({ rowIndex: null, colId: null });
@@ -103,23 +97,19 @@ function Sheets() {
   const [filterType, setFilterType] = useState('Todos');
   const [filterMonth, setFilterMonth] = useState('Todos');
 
-  // --- Estados para o Modal de Confirmação ---
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [confirmDialogAction, setConfirmDialogAction] = useState(null);
   const [confirmDialogMessage, setConfirmDialogMessage] = useState('');
   const [confirmDialogData, setConfirmDialogData] = useState(null);
 
-  // --- Estados para o Filtro de Coluna ---
   const [columnFilterAnchorEl, setColumnFilterAnchorEl] = useState(null);
   const [currentFilteringColumnId, setCurrentFilteringColumnId] = useState(null);
   const [selectedColumnFilters, setSelectedColumnFilters] = useState({});
 
-  // --- Estados para Snackbar (mensagens de feedback) ---
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-  // --- Estados para Importação ---
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [importLoading, setImportLoading] = useState(false);
@@ -137,13 +127,11 @@ function Sheets() {
     setSnackbarOpen(false);
   };
 
-  // Formatter para moeda
   const currencyFormatter = useMemo(() => new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   }), []);
 
-  // Obter meses únicos para o filtro global (das transações reais)
   const uniqueMonths = useMemo(() => {
     const months = new Set();
     transactionsData.forEach(row => {
@@ -155,7 +143,6 @@ function Sheets() {
     return ['Todos', ...Array.from(months).sort()];
   }, [transactionsData]);
 
-  // Obter valores únicos para a coluna atualmente sendo filtrada (adaptado para IDs de coluna)
   const uniqueValuesForCurrentColumn = useMemo(() => {
     if (!currentFilteringColumnId) return [];
     const values = new Set();
@@ -174,7 +161,7 @@ function Sheets() {
         } else if (colDef.id === 'data' && row.data) {
           values.add(new Date(row.data).toLocaleDateString());
         } else if (colDef.type === 'boolean') {
-          values.add(String(row[currentFilteringColumnId])); // Converte boolean para string
+          values.add(String(row[currentFilteringColumnId])); 
         }
         else {
           values.add(row[currentFilteringColumnId]);
@@ -184,7 +171,6 @@ function Sheets() {
     return Array.from(values).sort();
   }, [transactionsData, currentFilteringColumnId, columns]);
 
-  // --- Funções de Busca de Dados no Backend ---
   const fetchRelatedData = useCallback(async () => {
     setLoadingRelatedData(true);
     setRelatedDataError(null);
@@ -224,11 +210,9 @@ function Sheets() {
     fetchTransactions();
   }, [fetchRelatedData, fetchTransactions]);
 
-  // Filtrar dados da planilha com base no termo de busca, tipo, mês e filtros de coluna
   const filteredTransactionsData = useMemo(() => {
     let filteredData = transactionsData;
 
-    // Filtro por termo de busca global
     if (searchTerm) {
       const lowerCaseSearchTerm = searchTerm.toLowerCase();
       filteredData = filteredData.filter(row =>
@@ -250,12 +234,10 @@ function Sheets() {
       );
     }
 
-    // Filtro por tipo global
     if (filterType !== 'Todos') {
       filteredData = filteredData.filter(row => row.tipo === filterType);
     }
 
-    // Filtro por mês global
     if (filterMonth !== 'Todos') {
       filteredData = filteredData.filter(row => {
         if (!row.data) return false;
@@ -264,7 +246,6 @@ function Sheets() {
       });
     }
 
-    // Filtros específicos por coluna
     Object.entries(selectedColumnFilters).forEach(([colId, selectedValues]) => {
       if (selectedValues && selectedValues.length > 0) {
         const colDef = columns.find(col => col.id === colId);
@@ -294,7 +275,6 @@ function Sheets() {
   }, [transactionsData, searchTerm, filterType, filterMonth, selectedColumnFilters, columns]);
 
 
-  // --- Funções de Manipulação da Planilha ---
 
   const handleCellClick = (rowIndex, colId) => {
     setEditingCell({ rowIndex, colId });
@@ -310,7 +290,6 @@ function Sheets() {
           const updatedRow = { ...row, isModified: true };
 
           if (colId === 'valor' || colId === 'preco_estimado' || colId === 'preco_real' || colId === 'meta_valor') {
-            // Armazena o valor como string, substituindo vírgula por ponto para consistência
             updatedRow[colId] = newValue.replace(',', '.');
             if (isNaN(parseFloat(updatedRow[colId]))) {
                 updatedRow[colId] = '0.00';
