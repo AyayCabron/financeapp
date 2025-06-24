@@ -134,9 +134,6 @@ function Dashboard() {
     });
   }, []);
 
-  // ******************************************************************
-  // Funções para Navegação do Carrossel de Contas
-  // ******************************************************************
   const handleNextAccount = useCallback(() => {
     setCurrentAccountIndex((prevIndex) =>
       (prevIndex + 1) % accounts.length
@@ -148,10 +145,6 @@ function Dashboard() {
       (prevIndex - 1 + accounts.length) % accounts.length
     );
   }, [accounts.length]);
-
-  // ******************************************************************
-  // Funções para Modais e Formulários
-  // ******************************************************************
 
   // Total Balance Modal
   const handleOpenTotalBalanceModal = useCallback(() => {
@@ -222,10 +215,10 @@ function Dashboard() {
     // Log para depuração antes de abrir o modal
     console.log("Dashboard - Abrindo CategoriesListModal. Props passadas:", {
       categories: categories,
-      loading: loading, // Usando o estado de loading geral
-      error: error // Usando o estado de erro geral
+      loading: loading, 
+      error: error 
     });
-  }, [categories, loading, error]); // Adicionado dependências para o log
+  }, [categories, loading, error]); 
 
   const handleCloseCategoriesListModal = useCallback(() => setIsCategoriesListModalOpen(false), []);
 
@@ -256,46 +249,42 @@ function Dashboard() {
     setSnackbarOpen(false);
   }, []);
 
-  // ******************************************************************
-  // Funções de Carregamento de Dados
-  // ******************************************************************
-
   const fetchAccounts = useCallback(async () => {
     console.log('>>> fetchAccounts: Função chamada! <<<');
     try {
-      setLoading(true); // Inicia o loading
+      setLoading(true); 
       const response = await api.get('/accounts');
       setAccounts(response.data);
       const total = response.data.reduce((sum, account) => sum + parseFloat(account.saldo_atual), 0);
       setTotalBalance(total);
-      // Se a conta atual não existe mais (ex: foi excluída), resetar o index
+      
       if (currentAccountIndex >= response.data.length && response.data.length > 0) {
         setCurrentAccountIndex(0);
       } else if (response.data.length === 0) {
-        setCurrentAccountIndex(0); // Garante que o index seja 0 se não houver contas
+        setCurrentAccountIndex(0); 
       }
-      setError(null); // Limpa erros anteriores
+      setError(null); 
     } catch (err) {
       console.error("Erro ao buscar contas:", err);
       setError("Não foi possível carregar as contas.");
       handleOpenSnackbar("Erro ao carregar contas.", "error");
     } finally {
-      setLoading(false); // Finaliza o loading
+      setLoading(false); 
     }
-  }, [handleOpenSnackbar, currentAccountIndex]); // Adicionado currentAccountIndex como dependência
+  }, [handleOpenSnackbar, currentAccountIndex]); 
 
   const fetchTransactions = useCallback(async () => {
     try {
-      setLoading(true); // Inicia o loading
+      setLoading(true); 
       const response = await api.get('/transactions');
       setTransactions(response.data);
-      setError(null); // Limpa erros anteriores
+      setError(null); 
     } catch (err) {
       console.error("Erro ao buscar transações:", err);
       setError("Não foi possível carregar as transações.");
       handleOpenSnackbar("Erro ao carregar transações.", "error");
     } finally {
-      setLoading(false); // Finaliza o loading
+      setLoading(false); 
     }
   }, [handleOpenSnackbar]);
 
@@ -313,10 +302,6 @@ function Dashboard() {
       setLoading(false); // Finaliza o loading
     }
   }, [handleOpenSnackbar]);
-
-  // ******************************************************************
-  // Funções de Manipulação de Dados (CRUD)
-  // ******************************************************************
 
   const handleAccountAdded = useCallback(async (newAccount) => {
     await fetchAccounts();
@@ -390,33 +375,25 @@ function Dashboard() {
     }
   }, [fetchTransactions, fetchAccounts, handleOpenSnackbar]);
 
-  // ******************************************************************
-  // Hook de Efeito para Carregamento Inicial
-  // ******************************************************************
   useEffect(() => {
     fetchAccounts();
     fetchTransactions();
     fetchCategories();
   }, [fetchAccounts, fetchTransactions, fetchCategories]);
 
-  // ******************************************************************
-  // Custom Hook para Ações Rápidas
-  // ******************************************************************
   const quickActions = useQuickActionsLogic({
     handleOpenTransactionForm,
     handleOpenAccountForm,
-    handleOpenCategoryForm, // ✅ Passando handleOpenCategoryForm para o hook
+    handleOpenCategoryForm, 
     handleOpenTransactionsListModal,
     handleOpenAccountsListModal,
     handleOpenCategoriesListModal,
     handleOpenSheetsOptionsModal,
-    handleOpenTotalBalanceModal, // Passando para o useQuickActionsLogic se ele for usar
-    handleCloseTotalBalanceModal, // Passando para o useQuickActionsLogic se ele for usar
+    handleOpenTotalBalanceModal, 
+    handleCloseTotalBalanceModal, 
     navigate,
-    // Outras funções que QuickActionsLogic possa precisar...
   });
 
-  // Conta a ser exibida no carrossel
   const currentAccount = accounts[currentAccountIndex];
 
 
@@ -470,7 +447,7 @@ function Dashboard() {
           </Alert>
         )}
 
-        {/* ✅ AÇÕES RÁPIDAS: MANTENHA APENAS ESTA SEÇÃO DO QuickActionsCard */}
+        {/*QuickActionsCard */}
         <Box sx={{ mb: 4 }}>
           <Typography variant="h6" gutterBottom sx={{ color: theme.palette.text.primary, fontWeight: 'bold', mb: 2 }}>
             Ações Rápidas
@@ -483,7 +460,6 @@ function Dashboard() {
             onViewTransactionsClick={quickActions.onViewTransactionsClick}
             onViewAccountsClick={quickActions.onViewAccountsClick}
             onSheetsOptionsClick={quickActions.onSheetsOptionsClick}
-            // Mantenha as demais props de quickActions se existirem e forem usadas no QuickActionsCard
             onFinancialAgendaClick={quickActions.onFinancialAgendaClick}
             onGoalsObjectivesClick={quickActions.onGoalsObjectivesClick}
             onListsClick={quickActions.onListsClick}
@@ -545,7 +521,7 @@ function Dashboard() {
             </Paper>
           </Grid>
 
-          {/* NOVO: Card de Contas com Carrossel */}
+          {/*Card de Contas com Carrossel */}
           <Grid item xs={12} md={6}>
             <Paper
               elevation={6}
@@ -557,7 +533,7 @@ function Dashboard() {
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between', // Para botões ficarem no topo/fundo ou espaçados
+                justifyContent: 'space-between',
                 alignItems: 'center',
               }}
             >
@@ -585,13 +561,13 @@ function Dashboard() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  flexGrow: 1, // Permite que o conteúdo da conta ocupe espaço
+                  flexGrow: 1, 
                   textAlign: 'center',
                 }}>
                   <IconButton onClick={handlePrevAccount} disabled={accounts.length <= 1} sx={{ color: theme.palette.text.secondary }}>
                     <ArrowBackIosNewIcon />
                   </IconButton>
-                  <Box sx={{ flexGrow: 1, px: 2 }}> {/* Adicionado padding horizontal */}
+                  <Box sx={{ flexGrow: 1, px: 2 }}> {/* ver se ficou bom */}
                     {currentAccount ? (
                       <Box>
                         <Typography variant="h5" fontWeight="bold" sx={{ color: theme.palette.primary.main }}>
@@ -695,14 +671,14 @@ function Dashboard() {
         <CategoriesListModal
           open={isCategoriesListModalOpen}
           onClose={handleCloseCategoriesListModal}
-          categories={categories} // PASSANDO A PROPRIEDADE categories
-          loadingCategories={loading} // PASSANDO O ESTADO DE LOADING
-          categoriesError={error} // PASSANDO O ESTADO DE ERRO
+          categories={categories} 
+          loadingCategories={loading}
+          categoriesError={error} 
           onEditCategory={handleEditCategory}
-          onCategoryAdded={fetchCategories} // Passando a função fetchCategories
+          onCategoryAdded={fetchCategories} 
         />
 
-        {/* MODAL: SheetsOptionsModal */}
+        {/*SheetsOptionsModal */}
         <Dialog open={isSheetsOptionsModalOpen} onClose={handleCloseSheetsOptionsModal} fullWidth maxWidth="sm">
           <DialogTitle sx={{ backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, borderBottom: '1px solid', borderColor: theme.palette.divider }}>
             Opções de Planilhas e Gráficos
@@ -726,7 +702,7 @@ function Dashboard() {
                 <MenuItem value="categories_table">Tabela de Categorias</MenuItem>
                 <MenuItem value="income_vs_expense_chart">Gráfico de Receita vs. Despesa</MenuItem>
                 <MenuItem value="category_spending_chart">Gráfico de Gastos por Categoria</MenuItem>
-                {/* Adicione mais opções conforme necessário */}
+                {/* Preciso validar as adições */}
               </Select>
             </FormControl>
 
@@ -752,7 +728,7 @@ function Dashboard() {
               </Button>
             </Box>
 
-            {/* Opcional: Pré-visualização ou descrição do que será exibido */}
+            {/*Pré-visualização */}
             <Box sx={{ mt: 4, p: 2, border: `1px dashed ${theme.palette.divider}`, borderRadius: '8px' }}>
               {selectedSheetOption === 'transactions_table' && (
                 <Typography variant="body2" color="text.secondary">
