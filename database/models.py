@@ -1,17 +1,12 @@
-# personal_finance_api/database/models.py
-# IMPORTANTE: Garanta que Enum seja importado do módulo 'enum' padrão do Python
-from enum import Enum # <--- Certifique-se de que esta linha está presente e correta
-
-# Importar o Enum da SQLAlchemy, que é diferente do Enum do Python
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, Numeric, Date, Boolean, Enum as SQLEnum # <--- RENOMEADO para evitar conflito
-
+from enum import Enum
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, Numeric, Date, Boolean, Enum as SQLEnum
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base # Se estiver usando declarative_base em outro lugar, mantenha.
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
-from database.db import Base # Assumindo que Base é importada daqui
+from database.db import Base
 from decimal import Decimal
 import json
-from datetime import datetime, date # Importar datetime e date para tipos de colunas e defaults
+from datetime import datetime, date
 
 class User(Base):
     __tablename__ = "users"
@@ -129,7 +124,6 @@ class Categoria(Base):
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }
 
-# ENUMS Python
 class TipoTransacaoEnum(Enum):
     RECEITA = 'RECEITA'
     DESPESA = 'DESPESA'
@@ -140,7 +134,6 @@ class StatusTransacaoEnum(Enum):
     RECEBIDO = 'RECEBIDO'
     CANCELADO = 'CANCELADO'
 
-
 class Transacao(Base):
     __tablename__ = "transacoes"
 
@@ -149,7 +142,6 @@ class Transacao(Base):
     descricao = Column(Text, nullable=False)
     data = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     
-    # CORREÇÃO para o tipo de transação (incluindo name e create_type)
     tipo = Column(SQLEnum(TipoTransacaoEnum, name="tipo_transacao_enum", create_type=True), nullable=False)
     
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
@@ -162,7 +154,6 @@ class Transacao(Base):
     data_vencimento = Column(Date, nullable=True)
     entidade = Column(String(255), nullable=True)
     
-    # CORREÇÃO para o status da transação (incluindo name e create_type)
     status = Column(SQLEnum(StatusTransacaoEnum, name="status_transacao_enum", create_type=True), default=StatusTransacaoEnum.PENDENTE, nullable=False)
     
     data_pagamento_recebimento = Column(Date, nullable=True)
@@ -176,33 +167,26 @@ class Transacao(Base):
     conta = relationship("Conta", back_populates="transacoes")
     categoria = relationship("Categoria", back_populates="transacoes")
     
-    # --- CORREÇÃO AQUI: Relações auto-referenciais para parcelas ---
-    # Relação para a transação PAI (uma parcela aponta para seu pai)
-    # use_list=False assegura que esta relação retorne um único objeto (o pai), não uma lista.
     parent_transaction = relationship(
         'Transacao',
-        remote_side=[id], # 'id' é a coluna da tabela 'remota' (o pai)
-        foreign_keys=[id_transacao_pai], # 'id_transacao_pai' é a FK nesta tabela que aponta para o pai
-        back_populates='child_installments', # Nome da relação no lado pai (que será uma coleção de filhos)
-        uselist=False # Uma transação filha tem APENAS UM pai
+        remote_side=[id],
+        foreign_keys=[id_transacao_pai],
+        back_populates='child_installments',
+        uselist=False
     )
 
-    # Relação para as parcelas FILHAS (uma transação pai lista suas parcelas)
-    # Aqui, a foreign_keys é a coluna *nesta* tabela que aponta para o pai (seu próprio ID).
-    # O id_transacao_pai é a coluna na transação FILHA.
     child_installments = relationship(
         'Transacao',
-        primaryjoin="Transacao.id == Transacao.id_transacao_pai", # Como ligar pai com filho
-        foreign_keys=[id_transacao_pai], # A coluna FK na tabela *filha*
-        back_populates='parent_transaction', # Nome da relação no lado filho (que será um único pai)
-        cascade="all, delete-orphan" # Opcional: Se o pai for deletado, as parcelas filhas também são
+        primaryjoin="Transacao.id == Transacao.id_transacao_pai",
+        foreign_keys=[id_transacao_pai],
+        back_populates='parent_transaction',
+        cascade="all, delete-orphan"
     )
-
 
     def __repr__(self):
         return (
             f"<Transacao(id={self.id}, descricao='{self.descricao}', valor={self.valor}, "
-            f"tipo='{self.tipo.value if self.tipo else None}', data='{self.data}', conta_id={self.conta_id}, " # Usar .value
+            f"tipo='{self.tipo.value if self.tipo else None}', data='{self.data}', conta_id={self.conta_id}, "
             f"categoria_id={self.categoria_id}, user_id={self.user_id}, "
             f"status='{self.status.value if self.status else None}')>"
         )
@@ -211,8 +195,8 @@ class Transacao(Base):
         data_dict = {
             "id": self.id,
             "descricao": self.descricao,
-            "valor": float(self.valor), # Correção Decimal para float (ou str, se preferir)
-            "tipo": self.tipo.value if self.tipo else None, # Usar .value para o tipo
+            "valor": float(self.valor),
+            "tipo": self.tipo.value if self.tipo else None,
             "data": self.data.isoformat() if self.data else None,
             "conta_id": self.conta_id,
             "categoria_id": self.categoria_id,
@@ -222,7 +206,7 @@ class Transacao(Base):
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
             "data_vencimento": self.data_vencimento.isoformat() if self.data_vencimento else None,
             "entidade": self.entidade,
-            "status": self.status.value if self.status else None, # Usar .value para o status
+            "status": self.status.value if self.status else None,
             "data_pagamento_recebimento": self.data_pagamento_recebimento.isoformat() if self.data_pagamento_recebimento else None,
             "parcelado": self.parcelado,
             "numero_parcela": self.numero_parcela,
@@ -243,16 +227,12 @@ class Transacao(Base):
                     "nome": self.categoria.nome,
                     "tipo": self.categoria.tipo
                 }
-            # Adicionado o parent_transaction para a transação filha
             if self.id_transacao_pai and self.parent_transaction:
-                # Evitar recursão infinita (não necessário aqui, pois parent_transaction já é uselist=False)
-                # mas é boa prática ter em mente
                 data_dict['parent_transaction'] = self.parent_transaction.to_dict(include_related=False)
             
-            # Use child_installments para a lista de parcelas
-            if self.parcelado and self.child_installments: # Verifica se é uma transação pai e se tem parcelas carregadas
+            if self.parcelado and self.child_installments:
                 data_dict['child_installments'] = [parcela.to_dict(include_related=False) for parcela in list(self.child_installments)]
-            elif self.parcelado: # Se parcelado for True mas não há child_installments carregados (ou vazios)
+            elif self.parcelado:
                 data_dict['child_installments'] = []
                 
         return data_dict
