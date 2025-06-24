@@ -1,14 +1,13 @@
-/* src/index.css */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 :root {
-  --primary-color: #2c3e50;          /* azul escuro para textos principais */
-  --secondary-color: #7f8c8d;        /* cinza médio para textos secundários */
-  --accent-color: #2980b9;           /* azul vibrante para destaques e interações */
-  --background-color: #ecf0f1;       /* cinza claro de fundo geral */
-  --background-form: #ffffff;        /* fundo branco para formulários e cards */
-  --border-color: #d1d5db;           /* borda cinza clara */
-  --border-radius: 8px;              /* bordas arredondadas moderadas */
+  --primary-color: #2c3e50;
+  --secondary-color: #7f8c8d;
+  --accent-color: #2980b9;
+  --background-color: #ecf0f1;
+  --background-form: #ffffff;
+  --border-color: #d1d5db;
+  --border-radius: 8px;
   --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   --box-shadow-light: 0 1px 3px rgba(0,0,0,0.1);
@@ -36,7 +35,6 @@ body {
   align-items: flex-start;
 }
 
-/* Container geral do sistema ERP */
 .container {
   background: var(--background-form);
   padding: 2rem 2.5rem;
@@ -46,7 +44,6 @@ body {
   width: 100%;
 }
 
-/* Títulos */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   color: var(--primary-color);
@@ -54,7 +51,6 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.02em;
 }
 
-/* Formulários */
 form {
   background-color: var(--background-form);
   padding: 2rem 2rem 2.5rem;
@@ -68,7 +64,6 @@ form {
   gap: 1.25rem;
 }
 
-/* Labels */
 label {
   display: block;
   margin-bottom: 0.5rem;
@@ -78,7 +73,6 @@ label {
   user-select: none;
 }
 
-/* Inputs e selects */
 input, select {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -99,11 +93,10 @@ input::placeholder {
 
 input:focus, select:focus {
   border-color: var(--accent-color);
-  box-shadow: 0 0 5px var(--accent-color);
+  box_shadow: 0 0 5px var(--accent-color);
   outline: none;
 }
 
-/* Botões */
 button {
   padding: 0.85rem 1.5rem;
   font-size: 1rem;
@@ -114,16 +107,15 @@ button {
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.25s ease;
-  box-shadow: 0 2px 6px rgba(41, 128, 185, 0.5);
+  box_shadow: 0 2px 6px rgba(41, 128, 185, 0.5);
   align-self: flex-start;
 }
 
 button:hover {
   background-color: #1c5ea3;
-  box-shadow: 0 4px 12px rgba(28, 94, 163, 0.75);
+  box_shadow: 0 4px 12px rgba(28, 94, 163, 0.75);
 }
 
-/* Mensagens e alertas */
 .message {
   font-size: 1rem;
   color: var(--secondary-color);
@@ -131,7 +123,6 @@ button:hover {
   margin-top: 0.5rem;
 }
 
-/* Textos em código (ex: debug ou códigos) */
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
   background-color: #f5f7fa;
@@ -142,7 +133,6 @@ code {
   user-select: text;
 }
 
-/* Responsividade básica */
 @media (max-width: 600px) {
   body {
     padding: 1rem;
