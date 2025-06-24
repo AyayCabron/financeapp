@@ -3,14 +3,13 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from database.db import SessionLocal
-from database.models import Conta, User, Transacao # Certifique-se de que Transacao está importado
+from database.models import Conta, User, Transacao
 from sqlalchemy.exc import IntegrityError
 from decimal import Decimal, InvalidOperation
-from datetime import datetime # Adicionado para uso de data/hora
+from datetime import datetime
 
 account_bp = Blueprint('accounts', __name__, url_prefix='/accounts')
 
-# --- Rota para Criar uma Nova Conta (POST /accounts) ---
 @account_bp.route('', methods=['POST'])
 @jwt_required()
 def create_account():
@@ -18,7 +17,7 @@ def create_account():
     data = request.get_json()
 
     nome = data.get('nome')
-    saldo_inicial_str = data.get('saldo_inicial') # AGORA RECEBE saldo_inicial
+    saldo_inicial_str = data.get('saldo_inicial')
     tipo = data.get('tipo')
     instituicao = data.get('instituicao')
     observacoes = data.get('observacoes')
@@ -39,11 +38,10 @@ def create_account():
         if existing_account:
             return jsonify({"message": "Já existe uma conta com este nome para este usuário."}), 409
 
-        # saldo_atual é inicializado com o mesmo valor de saldo_inicial
         new_account = Conta(
             nome=nome,
             saldo_inicial=saldo_inicial,
-            saldo_atual=saldo_inicial, # saldo_atual começa com o mesmo valor de saldo_inicial
+            saldo_atual=saldo_inicial,
             tipo=tipo,
             instituicao=instituicao,
             observacoes=observacoes,
@@ -51,13 +49,13 @@ def create_account():
         )
         db.add(new_account)
         db.commit()
-        db.refresh(new_account) # Atualiza o objeto para incluir o ID e outros campos gerados
+        db.refresh(new_account)
 
         return jsonify({
             "id": new_account.id,
             "nome": new_account.nome,
-            "saldo_inicial": str(new_account.saldo_inicial), # Converter para string para JSON
-            "saldo_atual": str(new_account.saldo_atual),     # Converter para string para JSON
+            "saldo_inicial": str(new_account.saldo_inicial),
+            "saldo_atual": str(new_account.saldo_atual),
             "tipo": new_account.tipo,
             "instituicao": new_account.instituicao,
             "observacoes": new_account.observacoes,
@@ -77,7 +75,6 @@ def create_account():
     finally:
         db.close()
 
-# --- Rota para Listar Todas as Contas do Usuário (GET /accounts) ---
 @account_bp.route('', methods=['GET'])
 @jwt_required()
 def get_accounts():
@@ -89,8 +86,8 @@ def get_accounts():
             {
                 "id": account.id,
                 "nome": account.nome,
-                "saldo_inicial": str(account.saldo_inicial), # Converter para string
-                "saldo_atual": str(account.saldo_atual),     # Converter para string
+                "saldo_inicial": str(account.saldo_inicial),
+                "saldo_atual": str(account.saldo_atual),
                 "tipo": account.tipo,
                 "instituicao": account.instituicao,
                 "observacoes": account.observacoes,
@@ -105,7 +102,6 @@ def get_accounts():
     finally:
         db.close()
 
-# --- Rota para Obter uma Conta Específica (GET /accounts/<int:account_id>) ---
 @account_bp.route('/<int:account_id>', methods=['GET'])
 @jwt_required()
 def get_account(account_id):
@@ -119,8 +115,8 @@ def get_account(account_id):
         return jsonify({
             "id": account.id,
             "nome": account.nome,
-            "saldo_inicial": str(account.saldo_inicial), # Converter para string
-            "saldo_atual": str(account.saldo_atual),     # Converter para string
+            "saldo_inicial": str(account.saldo_inicial),
+            "saldo_atual": str(account.saldo_atual),
             "tipo": account.tipo,
             "instituicao": account.instituicao,
             "observacoes": account.observacoes,
@@ -134,7 +130,6 @@ def get_account(account_id):
     finally:
         db.close()
 
-# --- Rota para Atualizar Conta (PUT /accounts/<int:account_id>) ---
 @account_bp.route('/<int:account_id>', methods=['PUT'])
 @jwt_required()
 def update_account(account_id):
@@ -146,7 +141,6 @@ def update_account(account_id):
         if not conta:
             return jsonify({"message": "Conta não encontrada ou não pertence ao usuário logado."}), 404
 
-        # Atualiza apenas os campos que foram fornecidos na requisição
         if 'nome' in data:
             conta.nome = data['nome']
         if 'tipo' in data:
@@ -156,7 +150,6 @@ def update_account(account_id):
         if 'observacoes' in data:
             conta.observacoes = data['observacoes']
 
-        # Permite atualizar saldo_inicial diretamente (cuidado ao usar, idealmente saldo_atual é calculado)
         if 'saldo_inicial' in data:
             try:
                 new_saldo_inicial = Decimal(str(data['saldo_inicial']))
@@ -166,9 +159,6 @@ def update_account(account_id):
             except InvalidOperation:
                 return jsonify({"message": "Valor de saldo inicial inválido."}), 400
 
-        # O saldo_atual geralmente deve ser manipulado pelas transações, mas
-        # se houver uma necessidade específica de ajuste manual, pode ser permitido aqui.
-        # Caso contrário, remova esta parte.
         if 'saldo_atual' in data:
             try:
                 new_saldo_atual = Decimal(str(data['saldo_atual']))
@@ -178,8 +168,7 @@ def update_account(account_id):
             except InvalidOperation:
                 return jsonify({"message": "Valor de saldo atual inválido."}), 400
 
-
-        conta.updated_at = datetime.now() # Atualiza a data de atualização
+        conta.updated_at = datetime.now()
 
         db.add(conta)
         db.commit()
@@ -208,7 +197,6 @@ def update_account(account_id):
     finally:
         db.close()
 
-# --- Rota para Excluir Conta (DELETE /accounts/<int:account_id>) ---
 @account_bp.route('/<int:account_id>', methods=['DELETE'])
 @jwt_required()
 def delete_account(account_id):
@@ -219,9 +207,6 @@ def delete_account(account_id):
         if not conta:
             return jsonify({"message": "Conta não encontrada ou não pertence ao usuário logado."}), 404
 
-        # Verifica se existem transações associadas a esta conta
-        # Ajuste: se a conta for excluída, as transações associadas devem ser tratadas (ex: setar conta_id para NULL, excluir, etc.)
-        # Por enquanto, mantemos a restrição se houver transações.
         transacoes_count = db.query(Transacao).filter_by(conta_id=account_id).count()
         if transacoes_count > 0:
             return jsonify({"message": "Não é possível excluir a conta: existem transações associadas a ela."}), 409
