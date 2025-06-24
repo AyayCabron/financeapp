@@ -1,4 +1,3 @@
-// src/main.jsx
 import React, { useMemo, useState, createContext } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
@@ -7,29 +6,28 @@ import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 
-// Define o tema padrão (light)
 const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#7B61FF', // Um roxo vibrante
+      main: '#7B61FF',
     },
     secondary: {
-      main: '#F48C06', // Um laranja forte
+      main: '#F48C06',
     },
     error: {
-      main: '#D32F2F', // Vermelho padrão
+      main: '#D32F2F',
     },
     background: {
-      default: '#f0f2f5', // Um cinza bem claro para o fundo
-      paper: '#FFFFFF', // Branco puro para cards/superfícies
+      default: '#f0f2f5',
+      paper: '#FFFFFF',
     },
     text: {
-      primary: '#1A2027', // Texto escuro para contraste
-      secondary: '#6B7280', // Texto secundário em cinza
+      primary: '#1A2027',
+      secondary: '#6B7280',
     },
     custom: {
-      purpleGradient: 'linear-gradient(45deg, #8A2BE2 30%, #4B0082 90%)', // Gradiente roxo
+      purpleGradient: 'linear-gradient(45deg, #8A2BE2 30%, #4B0082 90%)',
       light50: 'rgba(255, 255, 255, 0.5)',
       light80: 'rgba(255, 255, 255, 0.8)',
     },
@@ -75,29 +73,28 @@ const lightTheme = createTheme({
   },
 });
 
-// Define o tema escuro
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#9370DB', // Um roxo mais claro para o dark mode
+      main: '#9370DB',
     },
     secondary: {
-      main: '#FFB74D', // Um laranja mais suave
+      main: '#FFB74D',
     },
     error: {
-      main: '#EF9A9A', // Vermelho mais claro
+      main: '#EF9A9A',
     },
     background: {
-      default: '#121212', // Fundo bem escuro
-      paper: '#1E1E1E', // Cinza escuro para cards/superfícies
+      default: '#121212',
+      paper: '#1E1E1E',
     },
     text: {
-      primary: '#E0E0E0', // Texto claro
-      secondary: '#B0B0B0', // Texto secundário em cinza claro
+      primary: '#E0E0E0',
+      secondary: '#B0B0B0',
     },
     custom: {
-      purpleGradient: 'linear-gradient(45deg, #4B0082 30%, #8A2BE2 90%)', // Gradiente roxo invertido
+      purpleGradient: 'linear-gradient(45deg, #4B0082 30%, #8A2BE2 90%)',
       light50: 'rgba(255, 255, 255, 0.5)',
       light80: 'rgba(255, 255, 255, 0.8)',
     },
@@ -146,7 +143,7 @@ const darkTheme = createTheme({
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 function ThemeWrapper({ children }) {
-  const [mode, setMode] = useState('light'); // Padrão 'light'
+  const [mode, setMode] = useState('light');
 
   const colorMode = useMemo(
     () => ({
@@ -169,7 +166,6 @@ function ThemeWrapper({ children }) {
   );
 }
 
-// O ponto de entrada da aplicação
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
