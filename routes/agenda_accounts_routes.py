@@ -1,5 +1,3 @@
-# personal_finance_api/routes/agenda_accounts_routes.py
-
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy.exc import IntegrityError
@@ -11,9 +9,6 @@ from database.models import Conta, User, Transacao
 
 agenda_account_bp = Blueprint('agenda_accounts', __name__, url_prefix='/agenda/accounts')
 
-# --- Rotas para Contas (Gerenciadas pela Agenda Financeira) ---
-# Estas rotas usarão os novos campos de Conta
-
 @agenda_account_bp.route('', methods=['POST'])
 @jwt_required()
 def create_agenda_account():
@@ -23,15 +18,15 @@ def create_agenda_account():
     nome = data.get('nome')
     saldo_inicial_str = data.get('saldo_inicial')
     tipo = data.get('tipo')
-    instituicao = data.get('instituicao') # NOVO CAMPO
-    observacoes = data.get('observacoes') # NOVO CAMPO
+    instituicao = data.get('instituicao')
+    observacoes = data.get('observacoes')
 
     if not nome or saldo_inicial_str is None or not tipo:
         return jsonify({"message": "Nome, saldo inicial e tipo da conta são obrigatórios."}), 400
 
     try:
         saldo_inicial = Decimal(str(saldo_inicial_str))
-        if saldo_inicial < 0 and tipo != 'Crédito': # Validação específica
+        if saldo_inicial < 0 and tipo != 'Crédito':
              return jsonify({"message": "Saldo inicial não pode ser negativo para este tipo de conta."}), 400
     except InvalidOperation:
         return jsonify({"message": "Valor de saldo inicial inválido."}), 400
@@ -47,7 +42,7 @@ def create_agenda_account():
             nome=nome,
             tipo=tipo,
             saldo_inicial=saldo_inicial,
-            saldo_atual=saldo_inicial, # Saldo atual começa com o saldo inicial
+            saldo_atual=saldo_inicial,
             instituicao=instituicao,
             observacoes=observacoes
         )
@@ -151,7 +146,6 @@ def delete_agenda_account(account_id):
         if not conta:
             return jsonify({"message": "Conta não encontrada ou não pertence ao usuário logado."}), 404
 
-        # Verifica se existem transações associadas a esta conta (modelo Transacao)
         transacoes_count = db.query(Transacao).filter_by(conta_id=account_id).count()
         if transacoes_count > 0:
             return jsonify({"message": "Não é possível excluir a conta: existem transações associadas a ela."}), 409
