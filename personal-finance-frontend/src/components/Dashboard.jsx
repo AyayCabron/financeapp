@@ -1,19 +1,18 @@
-// src/components/Dashboard.jsx
 import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import { ColorModeContext } from '../main';
 import { useNavigate } from 'react-router-dom';
 
-// Importa o NOVO Custom Hook
+
 import useQuickActionsLogic from '../hooks/useQuickActionsLogic';
 
-// Componentes de Formulário
+
 import CategoryForm from './Categories/CategoryForm';
 import AccountForm from './Accounts/AccountForm';
 import TransactionForm from './Transactions/TransactionForm';
 
-// Componentes para exibição de Listas completas (novos modais)
+
 import AccountsListModal from './Accounts/AccountsListModal';
 import TransactionsListModal from './Transactions/TransactionsListModal';
 import CategoriesListModal from './Categories/CategoriesListModal';
@@ -23,14 +22,7 @@ import Goals from './Goals/Goals';
 import Achievements from './Achievements/Achievements';
 import Analyst from './Analyst/Analyst';
 
-// NOVO: Importa o componente QuickActionsCard
 import QuickActionsCard from './Shared/QuickActionsCard';
-
-// NOVO: Importa IncomeVsExpenseChart para o modal de Planilhas/Gráficos
-// Você pode precisar criar este componente em src/components/Dashboard/IncomeVsExpenseChart.jsx
-// ou movê-lo de outro lugar se já existir.
-// import IncomeVsExpenseChart from './Dashboard/IncomeVsExpenseChart';
-
 
 import {
   Paper,
@@ -56,14 +48,12 @@ import {
   Grid,
   Snackbar,
   DialogActions,
-  // Novo: Componentes para o modal de Planilhas/Gráficos
   MenuItem,
   Select,
   FormControl,
   InputLabel,
 } from '@mui/material';
 
-// Ícones do Material UI
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -73,8 +63,8 @@ import ShowChartIcon from '@mui/icons-material/ShowChart';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ListAltIcon from '@mui/icons-material/ListAlt';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'; // Ícone para navegação de contas
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'; // Ícone para navegação de contas
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'; 
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'; 
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { Tooltip } from '@mui/material';
 
@@ -90,43 +80,41 @@ function Dashboard() {
   };
 
 
-  // Estados para dados do Dashboard
   const [accounts, setAccounts] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState([]);
   const [totalBalance, setTotalBalance] = useState(0);
-  const [loading, setLoading] = useState(true); // Estado de carregamento geral
-  const [error, setError] = useState(null); // Estado de erro geral
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
 
-  // NOVO: Estado para a conta atualmente exibida no carrossel
+
   const [currentAccountIndex, setCurrentAccountIndex] = useState(0);
 
-  // Estados para modais e formulários
+
   const [isTotalBalanceModalOpen, setIsTotalBalanceModalOpen] = useState(false);
   const [isCategoryFormOpen, setIsCategoryFormOpen] = useState(false);
   const [isAccountFormOpen, setIsAccountFormOpen] = useState(false);
   const [isTransactionFormOpen, setIsTransactionFormOpen] = useState(false);
 
-  // Estados para modais de listagem completa
   const [isAccountsListModalOpen, setIsAccountsListModalOpen] = useState(false);
   const [isTransactionsListModalOpen, setIsTransactionsListModalOpen] = useState(false);
   const [isCategoriesListModalOpen, setIsCategoriesListModalOpen] = useState(false);
 
-  // NOVO: Estado para o modal de opções de Planilhas/Gráficos
+
   const [isSheetsOptionsModalOpen, setIsSheetsOptionsModalOpen] = useState(false);
   const [selectedSheetOption, setSelectedSheetOption] = useState('transactions_table');
 
-  // Estados para edição (quando um item é selecionado para edição)
+
   const [editingCategory, setEditingCategory] = useState(null);
   const [editingAccount, setEditingAccount] = useState(null);
   const [editingTransaction, setEditingTransaction] = useState(null);
 
-  // Estados para Snackbar (mensagens de feedback)
+
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-  // Formato de moeda
+
   const currencyFormatter = useMemo(() => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -146,7 +134,7 @@ function Dashboard() {
     );
   }, [accounts.length]);
 
-  // Total Balance Modal
+
   const handleOpenTotalBalanceModal = useCallback(() => {
     setIsTotalBalanceModalOpen(true);
   }, []);
@@ -155,7 +143,7 @@ function Dashboard() {
     setIsTotalBalanceModalOpen(false);
   }, []);
 
-  // Category Form
+
   const handleOpenCategoryForm = useCallback(() => {
     setIsCategoryFormOpen(true);
     setEditingCategory(null);
@@ -187,7 +175,7 @@ function Dashboard() {
     setIsAccountFormOpen(true);
   }, []);
 
-  // Transaction Form
+
   const handleOpenTransactionForm = useCallback(() => {
     setIsTransactionFormOpen(true);
     setEditingTransaction(null);
@@ -203,7 +191,7 @@ function Dashboard() {
     setIsTransactionFormOpen(true);
   }, []);
 
-  // Modais de listagem completa
+
   const handleOpenAccountsListModal = useCallback(() => setIsAccountsListModalOpen(true), []);
   const handleCloseAccountsListModal = useCallback(() => setIsAccountsListModalOpen(false), []);
 
@@ -212,7 +200,7 @@ function Dashboard() {
 
   const handleOpenCategoriesListModal = useCallback(() => {
     setIsCategoriesListModalOpen(true);
-    // Log para depuração antes de abrir o modal
+
     console.log("Dashboard - Abrindo CategoriesListModal. Props passadas:", {
       categories: categories,
       loading: loading, 
@@ -222,7 +210,7 @@ function Dashboard() {
 
   const handleCloseCategoriesListModal = useCallback(() => setIsCategoriesListModalOpen(false), []);
 
-  // Funções para o modal de opções de Planilhas/Gráficos
+
   const handleOpenSheetsOptionsModal = useCallback(() => {
     setIsSheetsOptionsModalOpen(true);
   }, []);
@@ -235,7 +223,7 @@ function Dashboard() {
     setSelectedSheetOption(event.target.value);
   }, []);
 
-  // Funções para Snackbar
+
   const handleOpenSnackbar = useCallback((message, severity = 'success') => {
     setSnackbarMessage(message);
     setSnackbarSeverity(severity);
@@ -290,16 +278,16 @@ function Dashboard() {
 
   const fetchCategories = useCallback(async () => {
     try {
-      setLoading(true); // Inicia o loading
+      setLoading(true);
       const response = await api.get('/categories');
       setCategories(response.data);
-      setError(null); // Limpa erros anteriores
+      setError(null); 
     } catch (err) {
       console.error("Erro ao buscar categorias:", err);
       setError("Não foi possível carregar as categorias.");
       handleOpenSnackbar("Erro ao carregar categorias.", "error");
     } finally {
-      setLoading(false); // Finaliza o loading
+      setLoading(false); 
     }
   }, [handleOpenSnackbar]);
 
